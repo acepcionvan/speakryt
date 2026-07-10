@@ -15,7 +15,8 @@ Route::post('/registration-purchase', [HomeController::class, 'registrationPurch
 Route::get('/student/dashboard', [HomeController::class, 'studentDashboard'])->name('student.dashboard');
 Route::post('/student/packages/purchase', [HomeController::class, 'studentPackagePurchase'])->name('student.packages.purchase');
 Route::get('/student/lessons/{lesson}/pdf', [HomeController::class, 'studentLessonPdf'])->name('student.lessons.pdf');
-Route::get('/', [HomeController::class, 'index'])->middleware('dashboard.admin')->name('home');
+Route::get('/', [HomeController::class, 'websiteHome'])->name('website.home.root');
+Route::get('/dashboard', [HomeController::class, 'index'])->middleware('dashboard.admin')->name('home');
 Route::get('/students', [HomeController::class, 'studentsIndex'])->name('students.index');
 Route::get('/schedule-editor', [HomeController::class, 'scheduleEditor'])->name('schedule.index');
 Route::get('/payments-refunds', [HomeController::class, 'paymentsRefunds'])->name('payments.index');
