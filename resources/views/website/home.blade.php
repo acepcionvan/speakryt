@@ -72,7 +72,6 @@
 
             <div class="flex items-center gap-3">
                 <a class="hidden rounded-full border border-slate-300 px-5 py-3 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 hover:border-skyblue hover:text-skyblue sm:inline-flex" href="{{ route('login') }}">Student Login</a>
-                <a class="rounded-full bg-ink px-5 py-3 text-sm font-extrabold text-white shadow-card transition hover:-translate-y-0.5 hover:bg-skyblue" href="{{ route('website.register') }}">REGISTER NOW!</a>
             </div>
         </div>
     </header>
@@ -90,12 +89,6 @@
                     <p class="mt-8 max-w-2xl text-xl font-medium leading-9 text-softink">
                         Personalized online English lessons for kids, teens, university students, and professionals around the world.
                     </p>
-                    <div class="mt-10 flex flex-col gap-3 sm:flex-row">
-                        <a class="inline-flex items-center justify-center rounded-full bg-skyblue px-8 py-4 text-base font-black text-white shadow-glow transition hover:-translate-y-1 hover:bg-ink" href="{{ route('website.register') }}">REGISTER NOW!</a>
-                        <a class="inline-flex items-center justify-center rounded-full bg-lemon px-8 py-4 text-base font-black text-ink shadow-card transition hover:-translate-y-1 hover:bg-leaf" href="{{ route('website.register') }}">Book Kids Assessment</a>
-                        <a class="inline-flex items-center justify-center rounded-full border-2 border-skyblue bg-white px-8 py-4 text-base font-black text-skyblue transition hover:-translate-y-1 hover:border-ink hover:text-ink" href="{{ route('login') }}">Student Login</a>
-                        <a class="inline-flex items-center justify-center rounded-full border-2 border-ink bg-white px-8 py-4 text-base font-black text-ink transition hover:-translate-y-1 hover:border-skyblue hover:text-skyblue" href="#programs">View Programs</a>
-                    </div>
                 </div>
 
                 <div class="relative">
