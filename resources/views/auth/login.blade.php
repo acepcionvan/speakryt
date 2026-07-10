@@ -81,7 +81,6 @@
                         <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-accent">Secure Access</p>
                         <h2 class="font-display text-3xl font-bold text-primary">Welcome back</h2>
                         <p class="mt-2 text-sm leading-6 text-muted">Students, teachers, staff, managers, and admins are sent to the correct dashboard after login.</p>
-                        <p class="mt-3 rounded-lg border border-sky-100 bg-sky-50 px-3 py-2 text-xs font-semibold text-[#006397]">Demo student email: alex.thompson@email.com · Demo admin email: admin@speakryt.com</p>
                     </div>
 
                     @if ($errors->any())
@@ -97,7 +96,7 @@
                             <label class="mb-2 block text-sm font-bold text-primary" for="email">Email Address</label>
                             <div class="relative">
                                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted">mail</span>
-                                <input class="h-12 w-full rounded-lg border-line bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-accent focus:ring-accent/20" id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" placeholder="admin@speakryt.com" required autofocus>
+                                <input class="h-12 w-full rounded-lg border-line bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-accent focus:ring-accent/20" id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" placeholder="Enter your email address" required autofocus>
                             </div>
                         </div>
 
