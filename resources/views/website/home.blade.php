@@ -192,14 +192,16 @@
 
                 <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ([
-                        ['title' => 'Kids English', 'img' => 'images/website/course-conversation-ai.png'],
-                        ['title' => 'Teen English', 'img' => 'images/website/course-grammar-ai.png'],
-                        ['title' => 'Adult English', 'img' => 'images/website/course-cefr-ai.png'],
-                        ['title' => 'Business English', 'img' => 'images/website/course-business-ai.png'],
-                        ['title' => 'IELTS Preparation', 'img' => 'images/website/course-ielts-ai.png'],
-                        ['title' => 'TOEFL Preparation', 'img' => 'images/website/course-toefl-ai.png'],
-                        ['title' => 'Interview Preparation', 'img' => 'images/website/course-interview-ai.png'],
-                        ['title' => 'Conversational English', 'img' => 'images/website/course-conversation-ai.png'],
+                        ['title' => 'Kids English', 'description' => 'Playful one-on-one lessons that help children build vocabulary, pronunciation, and speaking confidence.', 'img' => 'images/website/course-conversation-ai.png'],
+                        ['title' => 'Teen English', 'description' => 'Structured support for teens who need stronger school English, clearer speaking, and better study habits.', 'img' => 'images/website/course-grammar-ai.png'],
+                        ['title' => 'Adult English', 'description' => 'Practical English coaching for adults who want to communicate naturally in work, travel, and daily life.', 'img' => 'images/website/course-cefr-ai.png'],
+                        ['title' => 'Business English', 'description' => 'Professional lessons for meetings, presentations, reports, workplace writing, and confident business communication.', 'img' => 'images/website/course-business-ai.png'],
+                        ['title' => 'IELTS Preparation', 'description' => 'Focused training for IELTS speaking, writing, reading, and listening with clear exam strategies.', 'img' => 'images/website/course-ielts-ai.png'],
+                        ['title' => 'TOEFL Preparation', 'description' => 'Academic English practice for TOEFL tasks, note-taking, speaking responses, and university readiness.', 'img' => 'images/website/course-toefl-ai.png'],
+                        ['title' => 'Interview Preparation', 'description' => 'Personal coaching for job, school, and visa interviews with polished answers and confident delivery.', 'img' => 'images/website/course-interview-ai.png'],
+                        ['title' => 'Conversational English', 'description' => 'Relaxed speaking practice for everyday conversations, fluency, pronunciation, and natural expressions.', 'img' => 'images/website/course-conversation-ai.png'],
+                        ['title' => 'Grammar Lessons', 'description' => 'Clear grammar coaching that helps learners fix sentence patterns and use English more accurately.', 'img' => 'images/website/course-grammar-ai.png'],
+                        ['title' => 'Sales English', 'description' => 'Communication training for sales calls, product presentations, client objections, and confident negotiations.', 'img' => 'images/website/course-business-ai.png'],
                     ] as $program)
                         <article class="group overflow-hidden rounded-[1.75rem] bg-white shadow-card ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-glow">
                             <div class="aspect-[4/3] overflow-hidden">
@@ -207,7 +209,7 @@
                             </div>
                             <div class="p-5">
                                 <h3 class="text-xl font-black text-ink">{{ $program['title'] }}</h3>
-                                <p class="mt-3 text-sm leading-6 text-softink">Personalized classes with clear correction, speaking practice, and flexible online scheduling.</p>
+                                <p class="mt-3 text-sm leading-6 text-softink">{{ $program['description'] }}</p>
                                 <a class="mt-5 inline-flex rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-skyblue" href="#contact">Learn More</a>
                             </div>
                         </article>
