@@ -68,7 +68,6 @@
                 <a class="transition hover:text-skyblue" href="#teachers">Teachers</a>
                 <a class="transition hover:text-skyblue" href="#faq">FAQs</a>
                 <a class="transition hover:text-skyblue" href="#contact">Contact Us</a>
-                <a class="transition hover:text-skyblue" href="{{ route('website.register') }}">Register</a>
             </nav>
 
             <div class="flex items-center gap-3">
