@@ -192,14 +192,14 @@
 
                 <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ([
-                        ['title' => 'Kids & Teens English', 'description' => 'Age-friendly lessons that build speaking confidence, school support, pronunciation, and strong study habits.', 'img' => 'images/website/course-conversation-ai.png'],
+                        ['title' => 'Kids & Teens English', 'description' => 'Age-friendly lessons that build speaking confidence, school support, pronunciation, and strong study habits.', 'img' => 'images/website/course-kids-teens-custom.png'],
                         ['title' => 'Adult English', 'description' => 'Practical coaching for adults who want clearer communication for daily life, travel, and personal growth.', 'img' => 'images/website/course-cefr-ai.png'],
                         ['title' => 'Business English', 'description' => 'Workplace-focused lessons for meetings, reports, emails, presentations, and professional conversations.', 'img' => 'images/website/course-business-ai.png'],
                         ['title' => 'IELTS Preparation', 'description' => 'Exam-focused training for IELTS speaking, writing, reading, and listening with guided test strategies.', 'img' => 'images/website/course-ielts-ai.png'],
                         ['title' => 'TOEFL Preparation', 'description' => 'Academic English practice for TOEFL tasks, note-taking, speaking responses, and university readiness.', 'img' => 'images/website/course-toefl-ai.png'],
                         ['title' => 'Interview Preparation', 'description' => 'Personal coaching for job, school, and visa interviews with polished answers and confident delivery.', 'img' => 'images/website/course-interview-ai.png'],
                         ['title' => 'Conversational English', 'description' => 'Natural speaking practice for fluency, pronunciation, listening confidence, and everyday expression.', 'img' => 'images/website/course-conversation-ai.png'],
-                        ['title' => 'Sales English', 'description' => 'Targeted communication practice for sales calls, client questions, product pitches, and negotiations.', 'img' => 'images/website/course-business-ai.png'],
+                        ['title' => 'Sales English', 'description' => 'Targeted communication practice for sales calls, client questions, product pitches, and negotiations.', 'img' => 'images/website/course-sales-custom.png'],
                     ] as $program)
                         <article class="group overflow-hidden rounded-[1.75rem] bg-white shadow-card ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-glow">
                             <div class="aspect-[4/3] overflow-hidden">
