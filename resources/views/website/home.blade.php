@@ -192,16 +192,14 @@
 
                 <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     @foreach ([
-                        ['title' => 'Kids English', 'description' => 'Playful one-on-one lessons that help children build vocabulary, pronunciation, and speaking confidence.', 'img' => 'images/website/course-conversation-ai.png'],
-                        ['title' => 'Teen English', 'description' => 'Structured support for teens who need stronger school English, clearer speaking, and better study habits.', 'img' => 'images/website/course-grammar-ai.png'],
-                        ['title' => 'Adult English', 'description' => 'Practical English coaching for adults who want to communicate naturally in work, travel, and daily life.', 'img' => 'images/website/course-cefr-ai.png'],
-                        ['title' => 'Business English', 'description' => 'Professional lessons for meetings, presentations, reports, workplace writing, and confident business communication.', 'img' => 'images/website/course-business-ai.png'],
-                        ['title' => 'IELTS Preparation', 'description' => 'Focused training for IELTS speaking, writing, reading, and listening with clear exam strategies.', 'img' => 'images/website/course-ielts-ai.png'],
+                        ['title' => 'Kids & Teens English', 'description' => 'Age-friendly lessons that build speaking confidence, school support, pronunciation, and strong study habits.', 'img' => 'images/website/course-conversation-ai.png'],
+                        ['title' => 'Adult English', 'description' => 'Practical coaching for adults who want clearer communication for daily life, travel, and personal growth.', 'img' => 'images/website/course-cefr-ai.png'],
+                        ['title' => 'Business English', 'description' => 'Workplace-focused lessons for meetings, reports, emails, presentations, and professional conversations.', 'img' => 'images/website/course-business-ai.png'],
+                        ['title' => 'IELTS Preparation', 'description' => 'Exam-focused training for IELTS speaking, writing, reading, and listening with guided test strategies.', 'img' => 'images/website/course-ielts-ai.png'],
                         ['title' => 'TOEFL Preparation', 'description' => 'Academic English practice for TOEFL tasks, note-taking, speaking responses, and university readiness.', 'img' => 'images/website/course-toefl-ai.png'],
                         ['title' => 'Interview Preparation', 'description' => 'Personal coaching for job, school, and visa interviews with polished answers and confident delivery.', 'img' => 'images/website/course-interview-ai.png'],
-                        ['title' => 'Conversational English', 'description' => 'Relaxed speaking practice for everyday conversations, fluency, pronunciation, and natural expressions.', 'img' => 'images/website/course-conversation-ai.png'],
-                        ['title' => 'Grammar Lessons', 'description' => 'Clear grammar coaching that helps learners fix sentence patterns and use English more accurately.', 'img' => 'images/website/course-grammar-ai.png'],
-                        ['title' => 'Sales English', 'description' => 'Communication training for sales calls, product presentations, client objections, and confident negotiations.', 'img' => 'images/website/course-business-ai.png'],
+                        ['title' => 'Conversational English', 'description' => 'Natural speaking practice for fluency, pronunciation, listening confidence, and everyday expression.', 'img' => 'images/website/course-conversation-ai.png'],
+                        ['title' => 'Sales English', 'description' => 'Targeted communication practice for sales calls, client questions, product pitches, and negotiations.', 'img' => 'images/website/course-business-ai.png'],
                     ] as $program)
                         <article class="group overflow-hidden rounded-[1.75rem] bg-white shadow-card ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-glow">
                             <div class="aspect-[4/3] overflow-hidden">
@@ -210,7 +208,6 @@
                             <div class="p-5">
                                 <h3 class="text-xl font-black text-ink">{{ $program['title'] }}</h3>
                                 <p class="mt-3 text-sm leading-6 text-softink">{{ $program['description'] }}</p>
-                                <a class="mt-5 inline-flex rounded-full bg-ink px-5 py-2.5 text-sm font-black text-white transition hover:bg-skyblue" href="#contact">Learn More</a>
                             </div>
                         </article>
                     @endforeach
@@ -243,8 +240,7 @@
 
                 <div class="mt-10 rounded-[2rem] bg-ink p-8 text-center text-white shadow-card">
                     <h3 class="text-3xl font-black">Ready to see your package options?</h3>
-                    <p class="mx-auto mt-3 max-w-2xl text-base font-semibold leading-7 text-slate-300">Submit the registration form and we will show pricing that matches your registered country. Public visitors cannot compare all country pricing from the homepage.</p>
-                    <a class="mt-6 inline-flex rounded-full bg-skyblue px-8 py-4 text-base font-black text-white transition hover:-translate-y-1 hover:bg-white hover:text-ink" href="{{ route('website.register') }}">Register to View Pricing</a>
+                    <p class="mx-auto mt-3 max-w-2xl text-base font-semibold leading-7 text-slate-300">Contact SpeakRyt and our team will guide you to the right package based on the learner's country, goals, and lesson type.</p>
                 </div>
             </div>
         </section>
@@ -318,8 +314,8 @@
                     <div class="mt-8 space-y-4">
                         @foreach ([
                             ['q' => 'What is SpeakRyt?', 'a' => 'SpeakRyt is an online English tutoring academy that helps students and professionals improve speaking, grammar, pronunciation, and real-life communication.'],
-                            ['q' => 'How do I register?', 'a' => 'Click Register Now or scan one of our official contact QR codes. Our team will guide you through assessment, schedule, and lesson options.'],
-                            ['q' => 'What types of English lessons do you offer?', 'a' => 'We offer CEFR, Business English, Sales English, IELTS, TOEFL, Grammar Workshop, Interview Preparation, and Conversational English.'],
+                            ['q' => 'How do I get started?', 'a' => 'Scan one of our official contact QR codes and our team will guide you through assessment, schedule, and lesson options.'],
+                            ['q' => 'What types of English lessons do you offer?', 'a' => 'We offer Kids and Teens English, Adult English, Business English, Sales English, IELTS, TOEFL, Interview Preparation, and Conversational English.'],
                             ['q' => 'Are lessons one-on-one?', 'a' => 'Yes. SpeakRyt focuses on one-on-one tutoring so learners receive personal feedback and support.'],
                             ['q' => 'Can I choose my schedule?', 'a' => 'Yes. We help match students with available teachers based on goals, level, and preferred time.'],
                         ] as $faq)
