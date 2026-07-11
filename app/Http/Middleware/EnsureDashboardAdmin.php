@@ -11,12 +11,6 @@ class EnsureDashboardAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (! $request->session()->has('user_role')) {
-            if (app()->environment('local')) {
-                $request->session()->put('user_role', 'admin');
-
-                return $next($request);
-            }
-
             return redirect()
                 ->route('login')
                 ->withErrors(['email' => 'Please log in as an Admin to view the CEO dashboard.']);

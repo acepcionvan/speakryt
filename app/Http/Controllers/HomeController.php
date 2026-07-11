@@ -21,17 +21,23 @@ class HomeController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $role = $this->roleForEmail($credentials['email']);
+        $account = $this->portalAccountForCredentials($credentials['email'], $credentials['password']);
+
+        if (! $account) {
+            return back()
+                ->withErrors(['email' => 'Invalid email address or password.'])
+                ->onlyInput('email');
+        }
 
         $request->session()->regenerate();
         $request->session()->put([
-            'user_email' => $credentials['email'],
-            'user_role' => $role,
+            'user_email' => $account['email'],
+            'user_role' => $account['role'],
         ]);
 
-        if ($role !== 'admin') {
+        if ($account['role'] !== 'admin') {
             return redirect()
-                ->route($this->roleLandingRoute($role))
+                ->route($this->roleLandingRoute($account['role']))
                 ->with('status', 'Welcome back to SpeakRyt. Your account does not have CEO dashboard access.');
         }
 
@@ -659,6 +665,64 @@ class HomeController extends Controller
             str_contains($email, 'manager') => 'manager',
             default => 'staff',
         };
+    }
+
+    private function portalAccountForCredentials(string $email, string $password): ?array
+    {
+        $email = strtolower(trim($email));
+
+        if (
+            in_array($email, $this->configuredEmailList('SPEAKRYT_ADMIN_EMAILS', ['vanacepcion@gmail.com', 'admin@speakryt.com']), true)
+            && $this->matchesConfiguredPassword($password, 'SPEAKRYT_ADMIN_PASSWORD_HASH', 'SPEAKRYT_ADMIN_PASSWORD')
+        ) {
+            return [
+                'email' => $email,
+                'role' => 'admin',
+            ];
+        }
+
+        $studentEmails = array_map(fn (array $student): string => strtolower($student['email']), $this->students());
+
+        if (
+            in_array($email, $studentEmails, true)
+            && $this->matchesConfiguredPassword($password, 'SPEAKRYT_STUDENT_PASSWORD_HASH', 'SPEAKRYT_STUDENT_PASSWORD')
+        ) {
+            return [
+                'email' => $email,
+                'role' => 'student',
+            ];
+        }
+
+        return null;
+    }
+
+    private function configuredEmailList(string $key, array $fallback): array
+    {
+        $rawEmails = (string) env($key, implode(',', $fallback));
+
+        return collect(explode(',', $rawEmails))
+            ->map(fn (string $email): string => strtolower(trim($email)))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function matchesConfiguredPassword(string $password, string $hashKey, string $plainKey): bool
+    {
+        $hash = env($hashKey);
+
+        if (is_string($hash) && $hash !== '') {
+            return Hash::check($password, $hash);
+        }
+
+        $plainPassword = env($plainKey);
+
+        if (is_string($plainPassword) && $plainPassword !== '') {
+            return hash_equals($plainPassword, $password);
+        }
+
+        return false;
     }
 
     private function roleLandingRoute(string $role): string
