@@ -41,14 +41,50 @@
                 <h1 class="text-2xl font-bold">Student Directory</h1>
                 <p class="text-sm opacity-90">Manage student profiles, package status, and assigned teachers.</p>
             </div>
-            <button class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold shadow-sm hover:bg-primary/90">
+            <a class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold shadow-sm hover:bg-primary/90" href="{{ route('students.create') }}">
                 <span class="material-symbols-outlined text-[20px]">person_add</span>
                 Add Student
-            </button>
+            </a>
         </header>
 
         <section class="flex-1 overflow-y-auto p-6">
             <div class="mx-auto max-w-[1400px]">
+                @if (session('status'))
+                    <div class="mb-5 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-800 shadow-sm">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <div class="mb-5 grid gap-4 md:grid-cols-3">
+                    <a class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" href="{{ route('students.create') }}">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined rounded-lg bg-cyan-50 p-2 text-header-blue">person_add</span>
+                            <div>
+                                <p class="text-sm font-bold text-primary">Create Student Account</p>
+                                <p class="mt-1 text-xs leading-5 text-slate-500">Add login email, temporary password, country, category, teacher, and starting package.</p>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined rounded-lg bg-white p-2 text-amber-600">manage_accounts</span>
+                            <div>
+                                <p class="text-sm font-bold text-amber-900">Account Controls</p>
+                                <p class="mt-1 text-xs leading-5 text-amber-700">Reset passwords, disable inactive accounts, and keep student access separate from team access.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-xl border border-indigo-200 bg-indigo-50 p-4 shadow-sm">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined rounded-lg bg-white p-2 text-indigo-600">inventory</span>
+                            <div>
+                                <p class="text-sm font-bold text-indigo-900">Package Tracking</p>
+                                <p class="mt-1 text-xs leading-5 text-indigo-700">Assign plans, record remaining lesson credits, and keep Kids/Adults labels visible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mb-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[20px] text-slate-400">search</span>
@@ -94,11 +130,12 @@
 
                 <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                     <div class="overflow-x-auto">
-                        <table class="min-w-[920px] w-full text-left">
+                        <table class="min-w-[1180px] w-full text-left">
                             <thead class="bg-surface-container-high">
                                 <tr>
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Student ID</th>
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Student Name</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Login Email</th>
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Category</th>
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Country</th>
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Level</th>
@@ -106,10 +143,14 @@
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Package</th>
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Remaining</th>
                                     <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Admin Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-200">
                                 @foreach ($students as $student)
+                                    @php
+                                        $profile = $studentProfiles[$student['id']] ?? null;
+                                    @endphp
                                     <tr class="student-row hover:bg-slate-50" data-search="{{ Str::lower($student['id'].' '.$student['name'].' '.$student['country'].' '.$student['teacher'].' '.$student['category'].' '.$student['status']) }}" data-category="{{ $student['category'] }}" data-country="{{ $student['country'] }}" data-teacher="{{ $student['teacher'] }}" data-status="{{ $student['status'] }}">
                                         <td class="px-6 py-4">
                                             <a class="text-sm font-bold text-secondary hover:underline" href="{{ route('students.show', ['student' => $student['id']]) }}">{{ $student['id'] }}</a>
@@ -117,6 +158,7 @@
                                         <td class="px-6 py-4">
                                             <a class="text-sm font-bold text-primary hover:text-secondary" href="{{ route('students.show', ['student' => $student['id']]) }}">{{ $student['name'] }}</a>
                                         </td>
+                                        <td class="px-6 py-4 text-sm text-slate-600">{{ $profile['email'] ?? 'Not set' }}</td>
                                         <td class="px-6 py-4">
                                             <span class="rounded-full border px-3 py-1 text-xs font-bold {{ $student['category_class'] }}">{{ $student['category'] }}</span>
                                         </td>
@@ -128,10 +170,35 @@
                                         <td class="px-6 py-4">
                                             <span class="rounded-full px-3 py-1 text-xs font-bold {{ $student['status_class'] }}">{{ $student['status'] }}</span>
                                         </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-wrap gap-2">
+                                                <a class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-primary hover:border-header-blue hover:text-header-blue" href="{{ route('students.edit', ['student' => $student['id']]) }}">
+                                                    <span class="material-symbols-outlined text-[16px]">edit</span>
+                                                    Edit
+                                                </a>
+                                                <form action="{{ route('students.reset-password', ['student' => $student['id']]) }}" method="POST">
+                                                    @csrf
+                                                    <input name="temporary_password" type="hidden" value="SpeakRyt{{ now()->format('md') }}!">
+                                                    <button class="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100" type="submit">
+                                                        <span class="material-symbols-outlined text-[16px]">key</span>
+                                                        Reset
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('students.status', ['student' => $student['id']]) }}" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input name="status" type="hidden" value="{{ $student['status'] === 'Active' ? 'Disabled' : 'Active' }}">
+                                                    <button class="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100" type="submit">
+                                                        <span class="material-symbols-outlined text-[16px]">{{ $student['status'] === 'Active' ? 'block' : 'check_circle' }}</span>
+                                                        {{ $student['status'] === 'Active' ? 'Disable' : 'Activate' }}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 <tr id="student-empty-state" class="hidden">
-                                    <td class="px-6 py-10 text-center text-sm font-semibold text-slate-500" colspan="9">No students match the selected filters.</td>
+                                    <td class="px-6 py-10 text-center text-sm font-semibold text-slate-500" colspan="11">No students match the selected filters.</td>
                                 </tr>
                             </tbody>
                         </table>

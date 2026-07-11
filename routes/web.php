@@ -25,6 +25,8 @@ Route::get('/', [HomeController::class, 'websiteHome'])->name('website.home.root
 Route::middleware('dashboard.admin')->group(function (): void {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
     Route::get('/students', [HomeController::class, 'studentsIndex'])->name('students.index');
+    Route::get('/students/create', [HomeController::class, 'createStudent'])->name('students.create');
+    Route::post('/students', [HomeController::class, 'storeStudent'])->name('students.store');
     Route::get('/schedule-editor', [HomeController::class, 'scheduleEditor'])->name('schedule.index');
     Route::get('/payments-refunds', [HomeController::class, 'paymentsRefunds'])->name('payments.index');
     Route::get('/packages-pricing', [HomeController::class, 'packagesPricing'])->name('packages.index');
@@ -42,6 +44,10 @@ Route::middleware('dashboard.admin')->group(function (): void {
     Route::get('/teachers', [HomeController::class, 'teachersIndex'])->name('teachers.index');
     Route::get('/teachers/{teacher}/payroll/{payroll}', [HomeController::class, 'showTeacherPayroll'])->name('teachers.payroll.show');
     Route::get('/teachers/{teacher}', [HomeController::class, 'showTeacher'])->name('teachers.show');
+    Route::get('/students/{student}/edit', [HomeController::class, 'editStudent'])->name('students.edit');
+    Route::put('/students/{student}', [HomeController::class, 'updateStudent'])->name('students.update');
+    Route::post('/students/{student}/reset-password', [HomeController::class, 'resetStudentPassword'])->name('students.reset-password');
+    Route::patch('/students/{student}/status', [HomeController::class, 'updateStudentStatus'])->name('students.status');
     Route::get('/students/{student}', [HomeController::class, 'showStudent'])->name('students.show');
     Route::post('/generate', [HomeController::class, 'generate'])->name('generate');
 });

@@ -511,8 +511,74 @@ class HomeController extends Controller
     {
         return view('students.index', [
             'students' => $this->studentDirectory(),
+            'studentProfiles' => $this->students(),
             'countryOptions' => $this->countryOptions(),
         ]);
+    }
+
+    public function createStudent(): View
+    {
+        return view('students.form', [
+            'mode' => 'create',
+            'student' => null,
+            'teachers' => $this->teachers(),
+            'countryOptions' => $this->countryOptions(),
+            'packageOptions' => $this->studentPackageOptions(),
+        ]);
+    }
+
+    public function storeStudent(Request $request): RedirectResponse
+    {
+        $this->validateStudentAccount($request);
+
+        return redirect()
+            ->route('students.index')
+            ->with('status', 'Student account setup captured. Connect the database to permanently save new student records.');
+    }
+
+    public function editStudent(string $student): View
+    {
+        $students = $this->students();
+        $profile = $students[$student] ?? $students['ST1-A001'];
+
+        return view('students.form', [
+            'mode' => 'edit',
+            'student' => $profile,
+            'teachers' => $this->teachers(),
+            'countryOptions' => $this->countryOptions(),
+            'packageOptions' => $this->studentPackageOptions(),
+        ]);
+    }
+
+    public function updateStudent(Request $request, string $student): RedirectResponse
+    {
+        $this->validateStudentAccount($request, updating: true);
+
+        return redirect()
+            ->route('students.show', ['student' => $student])
+            ->with('status', 'Student profile changes captured. Connect the database to permanently save updates.');
+    }
+
+    public function resetStudentPassword(Request $request, string $student): RedirectResponse
+    {
+        $request->validate([
+            'temporary_password' => ['required', 'string', 'min:8', 'max:64'],
+        ]);
+
+        return redirect()
+            ->route('students.index')
+            ->with('status', 'Temporary password prepared for '.$student.'. Share it privately with the student only.');
+    }
+
+    public function updateStudentStatus(Request $request, string $student): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'in:Active,Pending,Disabled'],
+        ]);
+
+        return redirect()
+            ->route('students.index')
+            ->with('status', $student.' account marked as '.$validated['status'].'. Connect the database to permanently save this status.');
     }
 
     public function teachersIndex(): View
@@ -1246,6 +1312,43 @@ class HomeController extends Controller
             'Poland',
             'Others',
         ];
+    }
+
+    private function studentPackageOptions(): array
+    {
+        return [
+            'Adult Bronze - 5 lessons',
+            'Adult Silver - 15 lessons',
+            'Adult Gold - 30 lessons',
+            'Adult Platinum - 45 lessons',
+            'Kids Bronze - 5 lessons',
+            'Kids Silver - 15 lessons',
+            'Kids Gold - 30 lessons',
+            'Kids Platinum - 45 lessons',
+        ];
+    }
+
+    private function validateStudentAccount(Request $request, bool $updating = false): array
+    {
+        return $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:160'],
+            'temporary_password' => [$updating ? 'nullable' : 'required', 'string', 'min:8', 'max:64'],
+            'category' => ['required', 'in:KIDS,ADULTS'],
+            'country' => ['required', 'string', 'max:80'],
+            'city' => ['nullable', 'string', 'max:120'],
+            'level' => ['required', 'string', 'max:30'],
+            'teacher_id' => ['required', 'string', 'max:30'],
+            'package' => ['required', 'string', 'max:120'],
+            'remaining_lessons' => ['required', 'integer', 'min:0', 'max:500'],
+            'phone' => ['required', 'string', 'max:60'],
+            'whatsapp' => ['nullable', 'string', 'max:80'],
+            'wechat' => ['nullable', 'string', 'max:80'],
+            'guardian_name' => ['nullable', 'string', 'max:120'],
+            'guardian_contact' => ['nullable', 'string', 'max:120'],
+            'status' => ['required', 'in:Active,Pending,Disabled'],
+            'admin_notes' => ['nullable', 'string', 'max:1000'],
+        ]);
     }
 
     private function paymentAlerts(): array
