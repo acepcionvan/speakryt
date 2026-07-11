@@ -5,6 +5,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [HomeController::class, 'login'])->name('login');
 Route::post('/login', [HomeController::class, 'loginSubmit'])->name('login.submit');
+Route::get('/portal/login', [HomeController::class, 'portalLogin'])->name('portal.login');
+Route::post('/portal/login', [HomeController::class, 'portalLoginSubmit'])->name('portal.login.submit');
+Route::get('/portal/dashboard', [HomeController::class, 'teamDashboard'])->name('portal.dashboard');
+Route::get('/students/login', [HomeController::class, 'studentLogin'])->name('student.login');
+Route::post('/students/login', [HomeController::class, 'studentLoginSubmit'])->name('student.login.submit');
 Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::get('/website', [HomeController::class, 'websiteHome'])->name('website.home');
 Route::get('/homepage', [HomeController::class, 'websiteHome'])->name('website.homepage');

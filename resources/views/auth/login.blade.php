@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SpeakRyt Portal Login</title>
+    <title>{{ $pageTitle ?? 'SpeakRyt Portal Login' }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -41,13 +41,13 @@
                 <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-white text-2xl font-bold text-[#244166]">S</div>
                 <div>
                     <p class="font-display text-2xl font-bold tracking-wide">SPEAKRYT</p>
-                    <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/70">Secure Portal</p>
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/70">{{ $loginType === 'student' ? 'Student Portal' : 'Secure Portal' }}</p>
                 </div>
             </div>
 
             <div class="max-w-xl">
-                <p class="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-sky-100">SpeakRyt Portal</p>
-                <h1 class="font-display text-5xl font-bold leading-tight">Access the right workspace for your SpeakRyt account.</h1>
+                <p class="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-sky-100">{{ $sideBadge ?? 'SpeakRyt Portal' }}</p>
+                <h1 class="font-display text-5xl font-bold leading-tight">{{ $sideHeading ?? 'Access the right workspace for your SpeakRyt account.' }}</h1>
             </div>
 
             <div class="grid grid-cols-3 gap-4 border-t border-white/15 pt-8">
@@ -72,15 +72,15 @@
                     <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#244166] text-2xl font-bold text-white">S</div>
                     <div>
                         <p class="font-display text-2xl font-bold tracking-wide text-primary">SPEAKRYT</p>
-                        <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted">Secure Portal</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted">{{ $loginType === 'student' ? 'Student Portal' : 'Secure Portal' }}</p>
                     </div>
                 </div>
 
                 <div class="rounded-2xl border border-line bg-white p-8 shadow-[0_24px_70px_rgba(15,23,42,0.12)] sm:p-10">
                     <div class="mb-8">
-                        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-accent">Secure Access</p>
-                        <h2 class="font-display text-3xl font-bold text-primary">Welcome back</h2>
-                        <p class="mt-2 text-sm leading-6 text-muted">Students, teachers, staff, managers, and admins are sent to the correct dashboard after login.</p>
+                        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-accent">{{ $eyebrow ?? 'Secure Access' }}</p>
+                        <h2 class="font-display text-3xl font-bold text-primary">{{ $heading ?? 'Welcome back' }}</h2>
+                        <p class="mt-2 text-sm leading-6 text-muted">{{ $description ?? 'Access your SpeakRyt workspace after login.' }}</p>
                     </div>
 
                     @if ($errors->any())
@@ -90,13 +90,20 @@
                         </div>
                     @endif
 
-                    <form class="space-y-5" action="{{ route('login.submit') }}" method="POST">
+                    @if (session('status'))
+                        <div class="mb-6 flex gap-3 rounded-lg border border-sky-200 bg-sky-50 p-3 text-sm font-semibold text-primary">
+                            <span class="material-symbols-outlined text-[20px] text-accent">info</span>
+                            <p>{{ session('status') }}</p>
+                        </div>
+                    @endif
+
+                    <form class="space-y-5" action="{{ $formAction ?? route('login.submit') }}" method="POST">
                         @csrf
                         <div>
-                            <label class="mb-2 block text-sm font-bold text-primary" for="email">Email Address</label>
+                            <label class="mb-2 block text-sm font-bold text-primary" for="email">{{ $emailLabel ?? 'Email Address' }}</label>
                             <div class="relative">
                                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted">mail</span>
-                                <input class="h-12 w-full rounded-lg border-line bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-accent focus:ring-accent/20" id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" placeholder="Enter your email address" required autofocus>
+                                <input class="h-12 w-full rounded-lg border-line bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-accent focus:ring-accent/20" id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" placeholder="{{ $emailPlaceholder ?? 'Enter your email address' }}" required autofocus>
                             </div>
                         </div>
 
@@ -119,7 +126,7 @@
                                 <input class="h-4 w-4 rounded border-line text-accent focus:ring-accent/20" id="remember" name="remember" type="checkbox" value="1">
                                 Remember me
                             </label>
-                            <span class="hidden text-xs font-bold uppercase tracking-wider text-slate-400 sm:inline">Protected Portal</span>
+                            <span class="hidden text-xs font-bold uppercase tracking-wider text-slate-400 sm:inline">{{ $portalNote ?? 'Protected Portal' }}</span>
                         </div>
 
                         <button class="group flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-bold text-white shadow-lg shadow-slate-900/15 transition-all hover:bg-[#173b5e] active:scale-[0.99]" type="submit">
@@ -127,9 +134,13 @@
                             Log In
                         </button>
                     </form>
+
+                    <div class="mt-6 border-t border-line pt-5 text-center">
+                        <a class="text-sm font-bold text-[#006397] transition-colors hover:text-primary" href="{{ $alternateHref ?? route('student.login') }}">{{ $alternateText ?? 'Student login' }}</a>
+                    </div>
                 </div>
 
-                <p class="mt-6 text-center text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">SpeakRyt ESL Management System</p>
+                <p class="mt-6 text-center text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $systemLabel ?? 'SpeakRyt ESL Management System' }}</p>
             </div>
         </section>
     </main>

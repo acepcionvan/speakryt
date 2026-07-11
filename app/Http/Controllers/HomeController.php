@@ -9,19 +9,64 @@ use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function login(): View
+    public function login(): RedirectResponse
     {
-        return view('auth.login');
+        return redirect()->route('student.login');
     }
 
-    public function loginSubmit(Request $request)
+    public function portalLogin(): View
+    {
+        return view('auth.login', [
+            'loginType' => 'portal',
+            'formAction' => route('portal.login.submit'),
+            'pageTitle' => 'SpeakRyt Team Portal Login',
+            'eyebrow' => 'Team Portal',
+            'heading' => 'Internal team access',
+            'description' => 'Admin, teachers, staff, and managers use this private portal to access their assigned workspace.',
+            'sideBadge' => 'SpeakRyt Team Portal',
+            'sideHeading' => 'Private workspace for SpeakRyt team accounts.',
+            'systemLabel' => 'SpeakRyt ESL Management System',
+            'emailLabel' => 'Work Email Address',
+            'emailPlaceholder' => 'Enter your SpeakRyt work email',
+            'portalNote' => 'Protected Team Portal',
+            'alternateHref' => route('student.login'),
+            'alternateText' => 'Student login',
+        ]);
+    }
+
+    public function studentLogin(): View
+    {
+        return view('auth.login', [
+            'loginType' => 'student',
+            'formAction' => route('student.login.submit'),
+            'pageTitle' => 'SpeakRyt Student Login',
+            'eyebrow' => 'Student Access',
+            'heading' => 'Welcome, SpeakRyt learner',
+            'description' => 'Students can view lessons, teacher feedback, packages, remaining credits, and lesson materials.',
+            'sideBadge' => 'SpeakRyt Student Portal',
+            'sideHeading' => 'Your lessons, packages, and feedback in one simple place.',
+            'systemLabel' => 'SpeakRyt Student Dashboard',
+            'emailLabel' => 'Student Email Address',
+            'emailPlaceholder' => 'Enter your student email',
+            'portalNote' => 'Student Portal',
+            'alternateHref' => route('portal.login'),
+            'alternateText' => 'Team portal',
+        ]);
+    }
+
+    public function loginSubmit(Request $request): RedirectResponse
+    {
+        return $this->portalLoginSubmit($request);
+    }
+
+    public function portalLoginSubmit(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        $account = $this->portalAccountForCredentials($credentials['email'], $credentials['password']);
+        $account = $this->teamAccountForCredentials($credentials['email'], $credentials['password']);
 
         if (! $account) {
             return back()
@@ -46,13 +91,41 @@ class HomeController extends Controller
             ->with('status', 'Welcome back to SpeakRyt.');
     }
 
-    public function logout(Request $request)
+    public function studentLoginSubmit(Request $request): RedirectResponse
     {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        $account = $this->studentAccountForCredentials($credentials['email'], $credentials['password']);
+
+        if (! $account) {
+            return back()
+                ->withErrors(['email' => 'Invalid student email address or password.'])
+                ->onlyInput('email');
+        }
+
+        $request->session()->regenerate();
+        $request->session()->put([
+            'user_email' => $account['email'],
+            'user_role' => 'student',
+        ]);
+
+        return redirect()
+            ->route('student.dashboard')
+            ->with('status', 'Welcome back to your SpeakRyt student dashboard.');
+    }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        $role = $request->session()->get('user_role');
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()
-            ->route('login')
+            ->route($role === 'student' ? 'student.login' : 'portal.login')
             ->with('status', 'You have been logged out.');
     }
 
@@ -285,7 +358,7 @@ class HomeController extends Controller
     {
         if (! $request->session()->has('user_role')) {
             return redirect()
-                ->route('login')
+                ->route('student.login')
                 ->withErrors(['email' => 'Please log in as a student to view your SpeakRyt dashboard.']);
         }
 
@@ -313,11 +386,38 @@ class HomeController extends Controller
         ]);
     }
 
+    public function teamDashboard(Request $request): View|RedirectResponse
+    {
+        if (! $request->session()->has('user_role')) {
+            return redirect()
+                ->route('portal.login')
+                ->withErrors(['email' => 'Please log in through the SpeakRyt team portal.']);
+        }
+
+        $role = $request->session()->get('user_role');
+
+        if ($role === 'student') {
+            return redirect()
+                ->route('student.dashboard')
+                ->withErrors(['email' => 'Student accounts use the student dashboard.']);
+        }
+
+        if ($role === 'admin') {
+            return redirect()->route('home');
+        }
+
+        return view('auth.team-dashboard', [
+            'role' => $role,
+            'email' => $request->session()->get('user_email'),
+            'cards' => $this->teamDashboardCards($role),
+        ]);
+    }
+
     public function studentPackagePurchase(Request $request): RedirectResponse
     {
         if (! $request->session()->has('user_role')) {
             return redirect()
-                ->route('login')
+                ->route('student.login')
                 ->withErrors(['email' => 'Please log in as a student to buy a package.']);
         }
 
@@ -363,7 +463,7 @@ class HomeController extends Controller
     {
         if (! $request->session()->has('user_role')) {
             return redirect()
-                ->route('login')
+                ->route('student.login')
                 ->withErrors(['email' => 'Please log in as a student to view lesson PDFs.']);
         }
 
@@ -667,7 +767,7 @@ class HomeController extends Controller
         };
     }
 
-    private function portalAccountForCredentials(string $email, string $password): ?array
+    private function teamAccountForCredentials(string $email, string $password): ?array
     {
         $email = strtolower(trim($email));
 
@@ -681,6 +781,24 @@ class HomeController extends Controller
             ];
         }
 
+        foreach (['teacher', 'manager', 'staff'] as $role) {
+            if (
+                in_array($email, $this->configuredEmailList('SPEAKRYT_'.strtoupper($role).'_EMAILS', []), true)
+                && $this->matchesConfiguredPassword($password, 'SPEAKRYT_'.strtoupper($role).'_PASSWORD_HASH', 'SPEAKRYT_'.strtoupper($role).'_PASSWORD')
+            ) {
+                return [
+                    'email' => $email,
+                    'role' => $role,
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    private function studentAccountForCredentials(string $email, string $password): ?array
+    {
+        $email = strtolower(trim($email));
         $studentEmails = array_map(fn (array $student): string => strtolower($student['email']), $this->students());
 
         if (
@@ -728,11 +846,35 @@ class HomeController extends Controller
     private function roleLandingRoute(string $role): string
     {
         return match ($role) {
-            'teacher' => 'schedule.index',
+            'teacher' => 'portal.dashboard',
             'student' => 'student.dashboard',
-            'manager' => 'schedule.index',
-            'staff' => 'staff.index',
-            default => 'login',
+            'manager' => 'portal.dashboard',
+            'staff' => 'portal.dashboard',
+            default => 'portal.login',
+        };
+    }
+
+    private function teamDashboardCards(string $role): array
+    {
+        return match ($role) {
+            'teacher' => [
+                ['title' => 'Schedule', 'description' => 'View assigned lessons and availability blocks.'],
+                ['title' => 'Assigned Students', 'description' => 'Review student names, lesson notes, and attendance.'],
+                ['title' => 'Lesson Feedback', 'description' => 'Prepare and save lesson feedback for student records.'],
+                ['title' => 'Payroll Record', 'description' => 'View your own payroll summary when enabled by admin.'],
+            ],
+            'manager' => [
+                ['title' => 'Schedule Monitoring', 'description' => 'Review teacher availability and lesson assignments.'],
+                ['title' => 'Student Support', 'description' => 'Handle approved student support tasks and reminders.'],
+                ['title' => 'Team Updates', 'description' => 'Review staff coordination and internal notes.'],
+                ['title' => 'Limited Reports', 'description' => 'Access approved non-sensitive operating summaries.'],
+            ],
+            default => [
+                ['title' => 'Assigned Tasks', 'description' => 'View internal tasks assigned by admin or manager.'],
+                ['title' => 'Documents', 'description' => 'Access approved company documents and memos.'],
+                ['title' => 'Schedule Support', 'description' => 'Support class coordination without sensitive payroll access.'],
+                ['title' => 'Operations Notes', 'description' => 'Track non-sensitive day-to-day operations notes.'],
+            ],
         };
     }
 

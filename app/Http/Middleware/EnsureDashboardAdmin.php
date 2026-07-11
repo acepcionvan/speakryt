@@ -12,14 +12,14 @@ class EnsureDashboardAdmin
     {
         if (! $request->session()->has('user_role')) {
             return redirect()
-                ->route('login')
-                ->withErrors(['email' => 'Please log in as an Admin to view the CEO dashboard.']);
+                ->route('portal.login')
+                ->with('status', 'Please log in as an Admin to view the CEO dashboard.');
         }
 
         if ($request->session()->get('user_role') !== 'admin') {
             return redirect()
                 ->route($this->fallbackRoute($request->session()->get('user_role')))
-                ->withErrors(['email' => 'Only Admin users can view the CEO dashboard.']);
+                ->with('status', 'Only Admin users can view the CEO dashboard.');
         }
 
         return $next($request);
@@ -28,11 +28,11 @@ class EnsureDashboardAdmin
     private function fallbackRoute(?string $role): string
     {
         return match ($role) {
-            'teacher' => 'schedule.index',
+            'teacher' => 'portal.dashboard',
             'student' => 'student.dashboard',
-            'staff' => 'staff.index',
-            'manager' => 'schedule.index',
-            default => 'login',
+            'staff' => 'portal.dashboard',
+            'manager' => 'portal.dashboard',
+            default => 'portal.login',
         };
     }
 }

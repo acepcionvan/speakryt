@@ -30,27 +30,32 @@ class ExampleTest extends TestCase
 
     public function test_the_ceo_dashboard_requires_an_admin_session(): void
     {
-        $this->get('/dashboard')->assertRedirect('/login');
+        $this->get('/dashboard')->assertRedirect('/portal/login');
 
         $this->withSession(['user_role' => 'teacher'])
             ->get('/dashboard')
-            ->assertRedirect('/schedule-editor');
+            ->assertRedirect('/portal/dashboard');
     }
 
-    public function test_login_rejects_unknown_accounts(): void
+    public function test_old_login_route_redirects_to_student_login(): void
     {
-        $this->post('/login', [
+        $this->get('/login')->assertRedirect('/students/login');
+    }
+
+    public function test_portal_login_rejects_unknown_accounts(): void
+    {
+        $this->post('/portal/login', [
             'email' => 'random@example.com',
             'password' => 'anything',
         ])->assertSessionHasErrors('email');
     }
 
-    public function test_login_accepts_configured_admin_password(): void
+    public function test_portal_login_accepts_configured_admin_password(): void
     {
         putenv('SPEAKRYT_ADMIN_PASSWORD=SecureTestPassword123!');
 
         try {
-            $this->post('/login', [
+            $this->post('/portal/login', [
                 'email' => 'vanacepcion@gmail.com',
                 'password' => 'SecureTestPassword123!',
             ])
@@ -61,13 +66,34 @@ class ExampleTest extends TestCase
         }
     }
 
+    public function test_student_login_accepts_configured_student_password(): void
+    {
+        putenv('SPEAKRYT_STUDENT_PASSWORD=StudentPassword123!');
+
+        try {
+            $this->post('/students/login', [
+                'email' => 'alex.thompson@email.com',
+                'password' => 'StudentPassword123!',
+            ])
+                ->assertRedirect('/student/dashboard')
+                ->assertSessionHas('user_role', 'student');
+        } finally {
+            putenv('SPEAKRYT_STUDENT_PASSWORD');
+        }
+    }
+
+    public function test_student_dashboard_uses_student_login(): void
+    {
+        $this->get('/student/dashboard')->assertRedirect('/students/login');
+    }
+
     public function test_user_management_requires_an_admin_session(): void
     {
-        $this->get('/user-management')->assertRedirect('/login');
+        $this->get('/user-management')->assertRedirect('/portal/login');
 
         $this->withSession(['user_role' => 'teacher'])
             ->get('/user-management')
-            ->assertRedirect('/schedule-editor');
+            ->assertRedirect('/portal/dashboard');
 
         $this->withSession(['user_role' => 'admin'])
             ->get('/user-management')

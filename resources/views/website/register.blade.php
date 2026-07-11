@@ -49,7 +49,7 @@
             </a>
             <div class="flex items-center gap-3">
                 <a class="rounded-full border border-slate-300 px-5 py-3 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 hover:border-skyblue hover:text-skyblue" href="{{ route('website.home') }}">Back to Website</a>
-                <a class="hidden rounded-full bg-ink px-5 py-3 text-sm font-extrabold text-white shadow-card transition hover:-translate-y-0.5 hover:bg-skyblue sm:inline-flex" href="{{ route('login') }}">Student Login</a>
+                <a class="hidden rounded-full bg-ink px-5 py-3 text-sm font-extrabold text-white shadow-card transition hover:-translate-y-0.5 hover:bg-skyblue sm:inline-flex" href="{{ route('student.login') }}">Student Login</a>
             </div>
         </div>
     </header>
