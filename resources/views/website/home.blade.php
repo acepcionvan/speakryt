@@ -71,7 +71,7 @@
             </nav>
 
             <div class="flex items-center gap-3">
-                <a class="hidden rounded-full border border-slate-300 px-5 py-3 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 hover:border-skyblue hover:text-skyblue sm:inline-flex" href="{{ route('student.login') }}">Student Login</a>
+                <a class="inline-flex rounded-full border border-slate-300 px-4 py-2.5 text-xs font-extrabold text-ink transition hover:-translate-y-0.5 hover:border-skyblue hover:text-skyblue sm:px-5 sm:py-3 sm:text-sm" href="{{ route('student.login') }}">Student Login</a>
             </div>
         </div>
     </header>
